@@ -34,7 +34,7 @@ What makes this tool unique is its integration with the Gemini API. With an opti
 
 <!-- SCREENSHOT SPOT -->
 
-![App Screenshot](web\img\site.png)
+![App Screenshot](web/img/site.png)
 
 ---
 
