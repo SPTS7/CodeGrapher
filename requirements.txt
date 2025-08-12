@@ -1,0 +1,4 @@
+google-generativeai
+graphviz
+Flask
+gitignore-parser
