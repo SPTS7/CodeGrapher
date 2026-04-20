@@ -53,13 +53,21 @@ def uninstall():
     from pathlib import Path
     
     # Remove local cache
-    cache_file = Path(".codegrapher_cache.json")
-    if cache_file.exists():
+    cache_dir = Path(".codegraph_cache")
+    if cache_dir.exists() and cache_dir.is_dir():
         try:
-            cache_file.unlink()
-            console.print("[green]Removed local cache file.[/green]")
+            shutil.rmtree(cache_dir)
+            console.print("[green]Removed local cache directory.[/green]")
         except Exception as e:
-            console.print(f"[red]Failed to remove local cache file: {e}[/red]")
+            console.print(f"[red]Failed to remove local cache directory: {e}[/red]")
+    
+    # Also check for the old cache file just in case
+    old_cache = Path(".codegrapher_cache.json")
+    if old_cache.exists():
+        try:
+            old_cache.unlink()
+        except Exception:
+            pass
             
     # Try to find the executable
     executable_path = shutil.which("cg")
@@ -114,7 +122,7 @@ def context(
         help="Maximum depth for 'flow' mode."
     ),
     output_file: Optional[str] = typer.Option(
-        "codegraph.md", 
+        "context_for_agents.md", 
         "--output", "-o", 
         help="Output Markdown file."
     )

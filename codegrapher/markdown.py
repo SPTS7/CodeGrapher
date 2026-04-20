@@ -7,7 +7,7 @@ def generate_markdown(
     project_dir: str = ".", 
     entry_file: Optional[str] = None, 
     entry_func: Optional[str] = None, 
-    output_file: str = "codegraph.md",
+    output_file: str = "context_for_agents.md",
     api_key: Optional[str] = None,
     mode: str = "project",
     max_depth: int = 10

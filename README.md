@@ -139,12 +139,14 @@ visualize(
 
 ## Roadmap
 
-* [ ] Add support for Go and Java.
-* [ ] Support for filtering out standard library calls automatically.
-* [ ] Integrate with OpenAI/Anthropic APIs alongside Gemini.
+* [ ] **Language Support**: Add native parsers for C++, Go, and Java.
+* [ ] **Advanced Filtering**: Support for excluding specific folders, files, or standard library calls automatically.
+* [ ] **IDE Integration**: Develop a VS Code extension for real-time context mapping.
+* [ ] **Multi-Model Support**: Integrate OpenAI and Anthropic APIs for function summarization alongside Gemini.
+* [ ] **Export Options**: Export context maps to JSON or GraphViz for advanced analysis.
 
 ---
 
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the MIT License. See `LICENSE` for more information.

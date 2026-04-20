@@ -30,7 +30,8 @@ except ImportError:
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-CACHE_FILE = ".codegrapher_cache.json"
+CACHE_DIR = ".codegraph_cache"
+CACHE_FILE = os.path.join(CACHE_DIR, "cache.json")
 
 def load_cache() -> Dict:
     if os.path.exists(CACHE_FILE):
@@ -43,6 +44,7 @@ def load_cache() -> Dict:
 
 def save_cache(cache_data: Dict):
     try:
+        os.makedirs(CACHE_DIR, exist_ok=True)
         with open(CACHE_FILE, 'w', encoding='utf-8') as f:
             json.dump(cache_data, f, indent=2)
     except Exception as e:
