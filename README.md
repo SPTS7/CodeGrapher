@@ -45,16 +45,16 @@ If you don't have Python installed, or just want a clean global executable:
 
 **Mac / Linux:**
 ```sh
-curl -fsSL https://raw.githubusercontent.com/simaosa/CodeGrapher/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/SPTS7/CodeGrapher/main/install.sh | bash
 ```
-*(Windows users can download the `.exe` directly from the [Releases page](https://github.com/simaosa/CodeGrapher/releases)).*
+*(Windows users can download the `.exe` directly from the [Releases page](https://github.com/SPTS7/CodeGrapher/releases)).*
 
 ### Option 2: Python Package (Developers)
 If you have Python 3.9+ installed:
 
 1. **Clone the repository:**
    ```sh
-   git clone https://github.com/simaosa/CodeGrapher.git
+   git clone https://github.com/SPTS7/CodeGrapher.git
    cd CodeGrapher
    ```
 

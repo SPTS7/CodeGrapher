@@ -2,7 +2,7 @@
 set -e
 
 # Repository information
-REPO="simaosa/CodeGrapher"
+REPO="SPTS7/CodeGrapher"
 BIN_NAME="cg"
 INSTALL_DIR="/usr/local/bin"
 

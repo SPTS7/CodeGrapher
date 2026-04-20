@@ -4,6 +4,9 @@ on:
   release:
     types: [created]
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build on ${{ matrix.os }}
@@ -30,10 +33,22 @@ jobs:
       run: |
         pyinstaller --name cg --onefile codegrapher/cli.py
 
+    - name: Rename binary (Linux)
+      if: runner.os == 'Linux'
+      run: mv dist/cg dist/cg-ubuntu
+
+    - name: Rename binary (macOS)
+      if: runner.os == 'macOS'
+      run: mv dist/cg dist/cg-macos
+
+    - name: Rename binary (Windows)
+      if: runner.os == 'Windows'
+      run: mv dist/cg.exe dist/cg-windows.exe
+
     - name: Upload Binary to Release
       uses: softprops/action-gh-release@v2
       with:
         files: |
-          dist/cg*
+          dist/cg-*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
