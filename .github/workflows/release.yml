@@ -34,7 +34,7 @@ jobs:
 
     - name: Build Standalone Binary with PyInstaller
       run: |
-        pyinstaller --name cg --onefile codegrapher/cli.py
+        pyinstaller --name cg --onefile --collect-all codegrapher codegrapher/cli.py
 
     - name: Rename binary (Linux)
       if: runner.os == 'Linux'
