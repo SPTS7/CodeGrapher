@@ -55,7 +55,7 @@ echo "Installation complete!"
 echo "CodeGrapher is installed at: $INSTALL_DIR/$BIN_NAME"
 echo ""
 echo "To use it, simply type:"
-echo "  cg genmd"
+echo "  cg context"
 echo ""
 
 # Check if ~/.local/bin is in PATH
