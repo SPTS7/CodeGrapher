@@ -1,11 +1,8 @@
 <div align="center">
 
-<!-- LOGO SPOT -->
-<img src="web/img/logo.png" alt="Logo" width="120" height="120">
+# AI CodeGrapher
 
-# AI Code Visualizer
-
-**Instantly generate beautiful, AI-documented call graphs from any Python project.**
+**Generate token-optimized context maps of Polyglot repositories for AI coding agents.**
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 [![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
@@ -14,118 +11,140 @@
 
 ---
 
-## About The Project
+## The Problem: Bloated Context Windows
 
-The **AI Code Visualizer** is a desktop tool designed to help developers understand complex Python codebases. By simply selecting a project folder, the application performs a static analysis to map out function calls and dependencies. It then renders an interactive, hierarchical graph that you can explore.
+Feeding a large codebase to an LLM (like Claude, GPT-4, or Gemini) usually means dumping raw source code into the prompt. This rapidly exhausts the context window, wastes thousands of tokens, and drowns the AI in implementation details when it just needs to understand the architecture.
 
-What makes this tool unique is its integration with the Gemini API. With an optional API key, it can automatically generate concise, one-sentence summaries for each function, providing instant documentation and making it easier than ever to get a high-level overview of how your code works.
+## The Solution: CodeGrapher
+
+**CodeGrapher** solves this by abstracting your codebase into a dense, semantic **Context Map**. 
+
+Instead of passing raw files, CodeGrapher uses **Tree-sitter** and the Gemini API to natively parse your code, extract function signatures, execution flow, and concise AI-generated summaries into a highly optimized Markdown file with Mermaid diagrams. 
+
+Your AI assistant gets a perfect blueprint of the codebase, using a fraction of the tokens.
 
 ### Key Features
-
-* **Local Project Analysis:** Securely analyze projects on your local machine. No code is ever uploaded.
-* **Interactive Call Graphs:** Visualize your code's architecture with a dynamic, zoomable graph powered by `vis.js`.
-* **AI-Powered Documentation:** Automatically generate summaries for functions using the Google Gemini API.
-* **Source Code Viewer:** Click on any function node in the graph to instantly see its source code.
-* **Cross-Platform:** Works on Windows, macOS, and Linux, with support for both Chrome and Firefox.
-
----
-
-### Screenshot
-
-<!-- SCREENSHOT SPOT -->
-
-![App Screenshot](web/img/site.png)
+* **Cross-Platform**: Works flawlessly on **Linux, macOS, and Windows** (available as a standalone binary or Python package).
+* **Multi-Language Support**: Natively parses **Python, JavaScript, and TypeScript** (`.py`, `.js`, `.jsx`, `.ts`, `.tsx`). 
+* **Token-Optimized Context Maps (`cg context`)**: Feed your AI a structured map of the exact execution flow, skipping irrelevant code bodies.
+* **Three Analysis Scopes**:
+  * `flow`: Trace execution from a specific entry point (e.g., `main.py`). The ultimate way to understand how a request propagates.
+  * `file`: Isolate and map only the functions inside a single file.
+  * `project`: Scan and map the entire codebase architecture.
+* **Smart AI Caching:** CodeGrapher caches AST parses and Gemini API summaries locally. Subsequent runs are completely instantaneous.
+* **[Bonus] Interactive Visuals (`cg vis`)**: For humans! Instantly open a zoomable, click-to-view-source network diagram in your browser.
 
 ---
 
-### Built With
+## Installation
 
-This project was built with a combination of powerful front-end and back-end technologies:
+You can install CodeGrapher either as a standalone binary (no Python required) or as a Python package.
 
-* **Python:** The core language for the analysis engine.
-* **Eel:** A lightweight library for creating electron-like desktop apps with Python.
-* **Google Gemini API:** For generating AI-powered code summaries.
-* **HTML5, CSS3, JavaScript:** For the user interface.
-* **Bootstrap 5:** For the responsive grid system and UI components.
-* **vis.js:** For rendering the interactive network graphs.
-* **highlight.js:** For beautiful syntax highlighting in the code viewer.
+### Option 1: Standalone Binary (Recommended)
+If you don't have Python installed, or just want a clean global executable:
 
----
+**Mac / Linux:**
+```sh
+curl -fsSL https://raw.githubusercontent.com/simaosa/CodeGrapher/main/install.sh | bash
+```
+*(Windows users can download the `.exe` directly from the [Releases page](https://github.com/simaosa/CodeGrapher/releases)).*
 
-## Getting Started
-
-To get a local copy up and running, follow these simple steps.
-
-### Prerequisites
-
-You need to have Python 3.9 or newer installed on your system. You can download it from [python.org](https://www.python.org/downloads/).
-
-You will also need either Google Chrome or Mozilla Firefox installed.
-
-### Installation
+### Option 2: Python Package (Developers)
+If you have Python 3.9+ installed:
 
 1. **Clone the repository:**
+   ```sh
+   git clone https://github.com/simaosa/CodeGrapher.git
+   cd CodeGrapher
+   ```
 
-2. **Navigate to the project directory:**
+2. **Install the package locally:**
+   ```sh
+   pip install -e .
+   ```
 
-    ```sh
-    cd CodeGrapher
-    ```
-
-3. **Install the required Python packages:**
-
-    ```sh
-    pip install -r requirements.txt
-    ```
+### Uninstall
+If you installed the standalone binary, you can easily remove it (and its local cache) by running:
+```sh
+cg uninstall
+```
+If you installed via Python/pip, you can remove it with:
+```sh
+pip uninstall codegrapher
+```
 
 ---
 
-## Usage
+## Usage (CLI)
 
-1. **Run the application** from the project's root directory:
+Once installed, use the `cg` command. It defaults to analyzing the current directory (`.`) in `project` mode.
 
-    ```sh
-    python app.py
-    ```
+### 1. Generating AI Context Maps
+Create a `.md` file to feed into your AI assistant. To get AI-generated function summaries, you need to provide an API key. 
+You can securely store it using the built-in config command:
+```sh
+cg config --api-key YOUR_API_KEY
+```
+*(Alternatively, you can set the `MODEL_API_KEY` environment variable).*
 
-2. **Browse for your project:** Click the "Browse" button to select the root folder of the Python project you want to analyze.
-3. **Specify the entry point:**
-    * **Entry File:** Enter the name of the main file where your program execution begins (e.g., `main.py`).
-    * **Entry Function (Optional):** Enter the name of the specific function you want to start the graph from (e.g., `main`). If you leave this blank, the tool will trace all functions within the specified entry file.
-4. **Add your Gemini API Key (Optional):** If you want AI-generated summaries, paste your Gemini API key into the corresponding field. You can get a key from [Google AI Studio](https://aistudio.google.com/app/apikey).
-5. **Generate!** Click the "Generate Visualization" button and watch the magic happen.
+```sh
+# Map the entire codebase (outputs to codegraph.md)
+cg context
+
+# Map only a specific file
+cg context . -e utils.py --mode file -o utils_context.md
+
+# Trace execution flow from main.py
+cg context . -e main.py --mode flow --max-depth 5
+```
+
+### 2. [Bonus] Interactive Visualizations
+Create an interactive, premium dark-mode HTML graph that opens automatically in your browser.
+
+```sh
+# Visualize the entire codebase
+cg vis
+
+# Visualize execution flow from main.py
+cg vis . -e main.py --mode flow
+```
+
+---
+
+## Usage (Python API)
+
+Automate documentation or create self-updating AI context files in your CI/CD pipelines.
+
+```python
+from codegrapher import generate_markdown, visualize
+
+# Generate AI Context
+generate_markdown(
+    project_dir="./my_project",
+    mode="project",
+    output_file="codebase_context.md",
+    api_key="YOUR_KEY"
+)
+
+# Generate HTML Visual
+visualize(
+    project_dir="./my_project",
+    entry_file="main.py",
+    mode="flow",
+    max_depth=5
+)
+```
 
 ---
 
 ## Roadmap
 
-* [ ] Add support for analyzing projects from a `.zip` file.
-* [ ] Implement an "Export to PNG/SVG" feature for the graph.
-* [ ] Add a dark mode/light mode toggle for the UI.
-* [ ] Improve call detection for dynamically called functions.
-
----
-
-## Contributing
-
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+* [ ] Add support for Go and Java.
+* [ ] Support for filtering out standard library calls automatically.
+* [ ] Integrate with OpenAI/Anthropic APIs alongside Gemini.
 
 ---
 
 ## License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
-
----
-
-## Contact
-
-Project Link
